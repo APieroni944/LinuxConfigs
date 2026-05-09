@@ -46,13 +46,16 @@ vim.opt.completeopt = { "menuone", "noselect", "noinsert" }
 
 -- 3. Plugin Configuration
 require('mini.completion').setup({
-  delay = { completion = 200, info = 100 },
   lsp_completion = {
-    source_func = 'completefunc',
-    auto_setup = true,
-  },
-  window = {
-    info = { border = 'rounded' },
+    -- Filter results before they are displayed
+    process_items = function(items, base)
+      -- Keep only the top 5 items
+      if #items > 5 then
+        items = vim.list_slice(items, 1, 5)
+      end
+      -- Return with default processing (for icons and snippets)
+      return MiniCompletion.default_process_items(items, base)
+    end,
   },
 })
 
